@@ -1,0 +1,12 @@
+{
+	"dependencies": {
+		"readline": "latest",
+		"request": "latest",
+		"request-promise": "latest",
+		"tough-cookie-file-store": "latest",
+		"bluebird": "latest"
+	},
+	"license" : "MIT",
+	"name" : "personalcapital-js",
+	"version" : "0.0.0"
+}
