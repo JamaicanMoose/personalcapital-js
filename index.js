@@ -1,8 +1,8 @@
 #!/usr/bin/env node
 
-var deviceName = "pcjs";
+const deviceName = "pcjs";
 
-var URL_BASE = "https://home.personalcapital.com";
+const URL_BASE = "https://home.personalcapital.com";
 const ENDPOINTS = {
         //Auth
         "identifyUser" : "/api/login/identifyUser",
@@ -64,18 +64,10 @@ const PAYLOADS = {
                 return temp;
         }
 }
-function POST_OPTIONS(uri, cookiejar, payload){
-        var temp = {
-                uri : uri,
-                jar : cookiejar,
-                form : payload,
-        };
-        return temp;
-}
 
 var Promise = require("bluebird");
 var request = require('request-promise');
-const readline = require('readline');
+var readline = require('readline');
 var fs = require('fs');
 var cookieStore = require('tough-cookie-file-store');
 var cookieJar = request.jar(new cookieStore('./pc-cookie.json'));
@@ -83,6 +75,10 @@ var cookieJar = request.jar(new cookieStore('./pc-cookie.json'));
 module.exports = new PersonalCapital();
 
 function PersonalCapital() {}
+
+/* Public Functions */
+
+/* Public Core Functions */
 
 PersonalCapital.prototype.auth = function(email, password, two_factor_type) {
         var self = {
@@ -112,13 +108,13 @@ PersonalCapital.prototype.deauth = function() {
 }
 
 PersonalCapital.prototype.endpoint = function(endpoint, data) {
-        return promise = new Promise(function(resolve, reject) {
+        return new Promise(function(resolve, reject) {
                 let payload = {
                         "lastServerChangeId" : "-1",
                         "csrf" : this.csrf,
                         "apiClient" : "WEB"
                 };
-                payload = Object.assign(payload, data);
+                Object.keys(data).forEach(function(key) { payload[key] = data[key]; });
                 let uri = URL_BASE + ENDPOINTS[endpoint];
                 let options = {
                         "uri" : uri,
@@ -128,12 +124,66 @@ PersonalCapital.prototype.endpoint = function(endpoint, data) {
                 request.post(options)
                 .catch(reject)
                 .then(function(body){
-                        console.log(body);
-                        resolve(body);
+                        resolve(JSON.parse(body)["spData"]);
                 });
         });
 }
 
+/* Public Sugar Functions */
+
+PersonalCapital.prototype.getNetWorthBreakdown = function() {
+        let self = this;
+        return new Promise(function(resolve, reject) {
+                self.endpoint("getAccounts", {}).catch(reject)
+                .then(function(data){
+                        delete data["accounts"];
+                        resolve(data);
+                })
+        });
+}
+
+PersonalCapital.prototype.getAccounts = function() {
+        let self = this;
+        return new Promise(function(resolve, reject) {
+                self.endpoint("getAccounts", {}).catch(reject)
+                .then(function(data){
+                        resolve(data["accounts"]);
+                })
+        });
+}
+
+/*
+        - Both start_date & end_date are UTC date strings of the format
+        YYYY-MM-DD.
+        - If start date is null, will get back to first transaction.
+        - If end date is null, will get up to most recent transaction.
+*/
+PersonalCapital.prototype.getTransactions = function(start_date, end_date) {
+        let self = this;
+        return new Promise(function(resolve, reject) {
+                let now = new Date();
+                if(start_date == null){
+
+                }
+                if(end_date == null){
+                        end_date = now.getFullYear()+'-'+(now.getMonth()+1)+'-'+now.getDate();
+                }
+                self.endpoint("getUserTransactions", {
+                        "sort_cols" : "transactionTime",
+                        "sort_rev" : "true",
+                        "page" : "0",
+                        "rows_per_page" : "100",
+                        "startDate" : start_date,
+                        "endDate" : end_date,
+                        "component" : "DATAGRID",
+                }).catch(reject)
+                .then(function(data){
+                        resolve(data["accounts"]);
+                })
+        });
+}
+
+/* Private Functions */
 
 function getTempCsrf(self) {
         return new Promise(function(resolve, reject) {
