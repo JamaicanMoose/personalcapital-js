@@ -1,0 +1,9 @@
+#Runtime Files
+pc-config.json
+pc-cookie.json
+
+#NodeJS Dependencies
+node_modules
+
+#Webstorm Project
+.idea

@@ -1,12 +1,26 @@
 {
+	"name": "personalcapital-js",
+	"version": "0.0.1",
+	"description": "NodeJS API wrapper for the private Personal Capital API",
+	"main": "personalcapital/personalcapital.js",
+	"repository": {
+		"type": "git",
+		"url": "https://github.com/JamaicanMoose/personalcapital-js.git"
+	},
+	"keywords": [
+		"personal capital",
+		"personalcapital",
+		"api",
+		"mint"
+	],
+	"author": "John Collins",
+	"license": "MIT",
+	"homepage": "https://github.com/JamaicanMoose/personalcapital-js",
 	"dependencies": {
 		"readline": "latest",
 		"request": "latest",
 		"request-promise": "latest",
 		"tough-cookie-file-store": "latest",
 		"bluebird": "latest"
-	},
-	"license" : "MIT",
-	"name" : "personalcapital-js",
-	"version" : "0.0.0"
+	}
 }
