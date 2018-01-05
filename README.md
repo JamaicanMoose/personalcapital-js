@@ -1,7 +1,4 @@
-<h1><img src="https://raw.githubusercontent.com/jamaicanmoose/ppersonalcapital-js/master/.github/personal-capital-js.png"/></h1>
-
-[![npm](https://img.shields.io/npm/v/personalcapital.svg?style=flat-square)](https://www.npmjs.com/package/personalcapital)
-[![npm](https://img.shields.io/npm/dm/personalcapital.svg)](https://www.npmjs.com/package/personalcapital)
+<h1><img src="https://github.com/JamaicanMoose/personalcapital-js/raw/master/.github/personal-capital-js.png"/></h1>
 
 NodeJS Wrapper for the [Personal Capital](https://www.personalcapital.com/) private API.
 
