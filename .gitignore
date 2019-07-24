@@ -7,3 +7,9 @@ node_modules
 
 #Webstorm Project
 .idea
+
+\.DS_Store
+
+pc-csrf\.json
+
+test\.js
