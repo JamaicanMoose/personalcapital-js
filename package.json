@@ -1,6 +1,6 @@
 {
 	"name": "personalcapital-js",
-	"version": "0.0.1",
+	"version": "2.0.0",
 	"description": "NodeJS API wrapper for the private Personal Capital API",
 	"main": "personalcapital/personalcapital.js",
 	"repository": {
@@ -17,10 +17,12 @@
 	"license": "MIT",
 	"homepage": "https://github.com/JamaicanMoose/personalcapital-js",
 	"dependencies": {
-		"readline": "latest",
-		"request": "latest",
-		"request-promise": "latest",
-		"tough-cookie-file-store": "latest",
-		"bluebird": "latest"
+		"enumify": "^1.0.4",
+		"readline-promise": "^1.0.4",
+		"request": "^2.88.0",
+		"request-promise-native": "^1.0.7"
+	},
+	"devDependencies": {
+		"tough-cookie-file-store": "^1.2.0"
 	}
 }
