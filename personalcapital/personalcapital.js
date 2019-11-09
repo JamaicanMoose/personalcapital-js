@@ -2,7 +2,7 @@
  * Personal Capital API NodeJS Wrapper
  * @author John Collins
  * @license MIT
- * @version 2.0.0
+ * @version 2.0.1
  */
 
 'use strict';
