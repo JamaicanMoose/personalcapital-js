@@ -166,7 +166,7 @@ class PersonalCapital {
         const resp = await r1.questionAsync('Enter 2FA code : ');
         await this.__2FAAuth__(resp);
       }
-      await this.__passwordAuth__('cathorsebatterystaple1');
+      await this.__passwordAuth__(passwd);
     }
   }
 
