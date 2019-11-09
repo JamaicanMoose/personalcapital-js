@@ -92,7 +92,8 @@ class PersonalCapital {
         getaccounts: '/api/newaccount/getAccounts2',
         gettransactions: '/api/transaction/getUserTransactions',
         getholdings: '/api/invest/getHoldings',
-        gethistories: '/api/account/getHistories'
+        gethistories: '/api/account/getHistories',
+        updatebalance: '/api/newaccount/updateAccount'
       }
     });
   }
@@ -166,7 +167,7 @@ class PersonalCapital {
         const resp = await r1.questionAsync('Enter 2FA code : ');
         await this.__2FAAuth__(resp);
       }
-      await this.__passwordAuth__('cathorsebatterystaple1');
+      await this.__passwordAuth__(passwd);
     }
   }
 
@@ -207,6 +208,38 @@ class PersonalCapital {
       accounts, startDate, endDate, intervalType, types));
     return res;
   }
+
+  // accountName must match name on account exactly
+  async updateBalance(accountName /*String*/, newBalance /*Number*/) {
+    const account = await this.getAccountByName(accountName);
+    const updateData = {
+      ...account,
+      isTransferPending: false,
+      isTransferEligible: true,
+      ownershipType: null,
+      employerMatchLimitType: "dollar",
+      requestSource: "USER",
+      balance: newBalance,
+      currentBalance: newBalance,
+      availableBalance: newBalance
+    };
+    const res = await this.endpoint("updatebalance", updateData);
+    return res;
+  }
+
+  async getAccountByName(accountName /*String*/) {
+    const accounts = await this.getAccounts();
+
+    const selectedAccount = accounts.filter(account => {
+      return account.name === accountName;
+    });
+    if (!selectedAccount || selectedAccount.length === 0) {
+      throw `Account ${accountName} not found!`;
+    }
+
+    return selectedAccount[0];
+  }
+
 }
 
 module.exports = {PersonalCapital, TwoFactorMode};

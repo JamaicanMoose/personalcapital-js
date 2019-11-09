@@ -17,6 +17,8 @@ Wrapper Functions :
     - [`getTransactions(accounts /*Array[String]*/, startDate /*String*/, endDate /*String*/)`]()
     - [`getHoldings(accounts /*Array[String]*/)`]()
     - [`getHistories(accounts /*Array[String]*/, startDate /*String*/, endDate /*String*/, intervalType /*String*/, types /*Array[String]*/)`]()
+    - [`updateBalance(accountName /*String*/, newBalance /*Number*/)`]()
+    - [`getAccountByName(accountName /*String*/)`]()
 
 ## Installation
 ```bash
