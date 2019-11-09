@@ -32,6 +32,8 @@ TwoFactorMode.initEnum([
   'EMAIL'
 ]);
 
+class AccountNotFoundError extends Error {}
+
 /*
  * PersonalCapital-js sesson class.
  */
@@ -75,6 +77,17 @@ class PersonalCapital {
           getholdings: (accounts) => ({ userAccountIds: accounts }),
           gethistories: (accounts, startDate, endDate, intervalType, types) => ({
             userAccountIds: accounts, startDate, endDate, intervalType, types
+          }),
+          updatebalance: (account, newBalance) => ({
+              ...account,
+              isTransferPending: false,
+              isTransferEligible: true,
+              ownershipType: null,
+              employerMatchLimitType: "dollar",
+              requestSource: "USER",
+              balance: newBalance,
+              currentBalance: newBalance,
+              availableBalance: newBalance
           })
         }
       },
@@ -212,34 +225,19 @@ class PersonalCapital {
   // accountName must match name on account exactly
   async updateBalance(accountName /*String*/, newBalance /*Number*/) {
     const account = await this.getAccountByName(accountName);
-    const updateData = {
-      ...account,
-      isTransferPending: false,
-      isTransferEligible: true,
-      ownershipType: null,
-      employerMatchLimitType: "dollar",
-      requestSource: "USER",
-      balance: newBalance,
-      currentBalance: newBalance,
-      availableBalance: newBalance
-    };
-    const res = await this.endpoint("updatebalance", updateData);
+    const res = await this.endpoint("updatebalance", this.payload.endpoint.updatebalance(account, newBalance));
     return res;
   }
 
   async getAccountByName(accountName /*String*/) {
     const accounts = await this.getAccounts();
-
-    const selectedAccount = accounts.filter(account => {
-      return account.name === accountName;
-    });
-    if (!selectedAccount || selectedAccount.length === 0) {
-      throw `Account ${accountName} not found!`;
+    const selectedAccount = accounts.find(account => account.name === accountName);
+    if (!selectedAccount) {
+      throw new AccountNotFoundError(`Account ${accountName} not found!`);
     }
-
-    return selectedAccount[0];
+    return selectedAccount;
   }
 
 }
 
-module.exports = {PersonalCapital, TwoFactorMode};
+module.exports = {PersonalCapital, TwoFactorMode, AccountNotFoundError};
