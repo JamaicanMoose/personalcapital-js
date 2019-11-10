@@ -33,6 +33,7 @@ TwoFactorMode.initEnum([
 ]);
 
 class AccountNotFoundError extends Error {}
+class HoldingNotFoundError extends Error {}
 
 /*
  * PersonalCapital-js sesson class.
@@ -82,13 +83,38 @@ class PersonalCapital {
               ...account,
               isTransferPending: false,
               isTransferEligible: true,
-              ownershipType: null,
               employerMatchLimitType: "dollar",
               requestSource: "USER",
               balance: newBalance,
               currentBalance: newBalance,
               availableBalance: newBalance
-          })
+          }),
+          addholding: (userAccountId, ticker, description, quantity, price, costBasis) => ({
+            userAccountId,
+            ticker,
+            description,
+            quantity,
+            price,
+            value: price * quantity,
+            costBasis,
+            source: "USER"
+          }),
+          updateholding: (holding, quantity, price, costBasis) => ({
+            ...holding,
+            quantity,
+            price,
+            value: price * quantity,
+            costBasis,
+            source: "USER"
+          }),
+          updateinvestmentcashbalance: (userAccountId, newBalance) => ({
+            userAccountId,
+            description: "Cash",
+            quantity: newBalance,
+            price: newBalance,
+            priceSource: "USER",
+            sourceAssetId: "USER_DESCR_Cash"
+          }),
         }
       },
       uris : {
@@ -106,7 +132,9 @@ class PersonalCapital {
         gettransactions: '/api/transaction/getUserTransactions',
         getholdings: '/api/invest/getHoldings',
         gethistories: '/api/account/getHistories',
-        updatebalance: '/api/newaccount/updateAccount'
+        updatebalance: '/api/newaccount/updateAccount',
+        updateholding: '/api/account/updateHolding',
+        addholding: '/api/account/addHolding'
       }
     });
   }
@@ -223,10 +251,45 @@ class PersonalCapital {
   }
 
   // accountName must match name on account exactly
+  // This method supports all custom accounts other than Custom Stock Options and Manual Investment Holdings
   async updateBalance(accountName /*String*/, newBalance /*Number*/) {
     const account = await this.getAccountByName(accountName);
     const res = await this.endpoint("updatebalance", this.payload.endpoint.updatebalance(account, newBalance));
     return res;
+  }
+
+  // Works with Manual Investment Holdings
+  async addHolding(accountName, /*String*/ ticker, /*String*/ description, /*String*/ quantity, /*Number*/ price, /*Number*/ costBasis /*Number*/) {
+    const account = await this.getAccountByName(accountName);
+    const res = await this.endpoint("addholding", this.payload.endpoint.addholding(account.userAccountId, ticker, description, quantity, price, costBasis));
+    return res;
+  }
+
+  // Works with Manual Investment Holdings
+  async updateHolding(accounts, /*Array[String]*/ holdingTicker, /*String*/ quantity, /*Number*/ price, /*Number*/ costBasis /*Number*/) {
+    const holding = await this.getHoldingByTicker(accounts, holdingTicker);
+    const res = await this.endpoint("updateholding", this.payload.endpoint.updateholding(holding, quantity, price, costBasis));
+    return res;
+  }
+
+  // Works With Manual Investment Holdings
+  async updateInvestmentCashBalance(accountName, /*String*/ newBalance /*Number*/) {
+    const account = await this.getAccountByName(accountName);
+    const res = await this.endpoint("updateholding", this.payload.endpoint.updateinvestmentcashbalance(account.userAccountId, newBalance));
+    return res;
+  }
+
+  async getHoldingByTicker(accounts, /*Array[String]*/ holdingTicker /*String*/) {
+    const holdingsData = await this.getHoldings(accounts);
+    const holdings = holdingsData.holdings;
+    if(!holdings) {
+      throw new HoldingNotFoundError(`Holdings data not found`);
+    }
+    const selectedHolding = holdings.find(holding => holding.ticker === holdingTicker);
+    if (!selectedHolding) {
+      throw new AccountNotFoundError(`Holding ${holdingTicker} not found!`);
+    }
+    return selectedHolding;
   }
 
   async getAccountByName(accountName /*String*/) {
@@ -240,4 +303,4 @@ class PersonalCapital {
 
 }
 
-module.exports = {PersonalCapital, TwoFactorMode, AccountNotFoundError};
+module.exports = {PersonalCapital, TwoFactorMode, AccountNotFoundError, HoldingNotFoundError};
