@@ -18,7 +18,14 @@ Wrapper Functions :
     - [`getHoldings(accounts /*Array[String]*/)`]()
     - [`getHistories(accounts /*Array[String]*/, startDate /*String*/, endDate /*String*/, intervalType /*String*/, types /*Array[String]*/)`]()
     - [`updateBalance(accountName /*String*/, newBalance /*Number*/)`]()
+    - [`addHolding(accountName, /*String*/ ticker, /*String*/ description, /*String*/ quantity, /*Number*/ price, /*Number*/ costBasis /*Number*/)`]()
+    - [`updateHolding(accounts, /*Array[String]*/ holdingTicker, /*String*/ quantity, /*Number*/ price, /*Number*/ costBasis /*Number*/)`]()
+    - [`updateInvestmentCashBalance(accountName, /*String*/ newBalance /*Number*/)`]()
+    - [`getHoldingByTicker(accounts, /*Array[String]*/ holdingTicker /*String*/)`]()
     - [`getAccountByName(accountName /*String*/)`]()
+
+`updateBalance` method works with all custom accounts other than Custom Stock Options and Manual Investment Holdings.
+`addHolding`, `updateHolding`, and `updateInvestmentCashBalance` methods work with Manual Investment Holdings asset type
 
 ## Installation
 ```bash
