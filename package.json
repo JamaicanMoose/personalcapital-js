@@ -1,6 +1,6 @@
 {
 	"name": "personalcapital-js",
-	"version": "2.0.1",
+	"version": "2.1.0",
 	"description": "NodeJS API wrapper for the private Personal Capital API",
 	"main": "personalcapital/personalcapital.js",
 	"repository": {
