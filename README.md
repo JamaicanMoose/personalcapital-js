@@ -2,6 +2,10 @@
 
 NodeJS Wrapper for the [Personal Capital](https://www.personalcapital.com/) private API.
 
+![npm (tag)](https://img.shields.io/npm/v/personalcapital-js/latest)
+![npm](https://img.shields.io/npm/dt/personalcapital-js)
+![GitHub commits since latest release](https://img.shields.io/github/commits-since/JamaicanMoose/personalcapital-js/latest/dev)
+
 SMS 2FA must be enabled on your account in order to use this, this is not an API limitation, should someone need non-sms auth it can be implemented.
 
 Wrapper Functions :
